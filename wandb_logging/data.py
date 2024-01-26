@@ -19,7 +19,7 @@ class DataModule(pl.LightningDataModule):
         self.val_data = cola_dataset['validation']
 
     def tokenize_data(self, example):
-        return self.tokenizer(example['sentence'], truncation=True, padding='max_length', max_length=128)
+        return self.tokenizer(example['sentence'], truncation=True, padding='max_length', max_length=512)
 
     def setup(self, stage=None):
         # we set up only relevant datasets when stage is specified

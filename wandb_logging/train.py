@@ -20,7 +20,7 @@ class SamplesVisualisationLogger(pl.Callback):
         sentences = val_batch['sentence']
 
         outputs = pl_module(val_batch['input_ids'], val_batch['attention_mask'])
-        preds = torch.argmax(outputs.logits, 1)
+        preds = torch.argmax(outputs[0], -1)
         labels = val_batch['label']
 
         df = pd.DataFrame({'Sentence': sentences, 'Label': labels.numpy(), 'Predicted': preds.numpy()})
