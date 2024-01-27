@@ -129,11 +129,9 @@ dmypy.json
 .pyre/
 .vscode/
 */logs/*
-*/models/*
 */wandb/*
 */outputs/*
 */multirun/*
 
 .DS_Store
 */.DS_Store
-wandb
