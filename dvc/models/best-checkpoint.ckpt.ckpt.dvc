@@ -1,0 +1,6 @@
+outs:
+- md5: 23073acca8ebe02c4bd18e1652d17b01
+  size: 52686312
+  isexec: true
+  hash: md5
+  path: best-checkpoint.ckpt.ckpt
