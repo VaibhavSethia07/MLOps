@@ -4,10 +4,12 @@ import pandas as pd
 import pytorch_lightning as pl
 import seaborn as sns
 import torch
+import torch.nn as nn
+import torch.nn.functional as F
 import torchmetrics
 import wandb
 from sklearn.metrics import confusion_matrix
-from transformers import AutoModelForSequenceClassification
+from transformers import AutoModel
 
 
 class ColaModel(pl.LightningModule):
@@ -15,7 +17,8 @@ class ColaModel(pl.LightningModule):
         super(ColaModel, self).__init__()
         self.save_hyperparameters()
 
-        self.bert = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=2)
+        self.bert = AutoModel.from_pretrained(model_name, num_labels=2)
+        self.W = nn.Linear(self.bert.config.hidden_size, 2)
         self.num_classes = 2
         self.validation_step_outputs = []
 
@@ -31,24 +34,29 @@ class ColaModel(pl.LightningModule):
         self.recall_micro_metric = torchmetrics.Recall(task='multiclass', average='micro',
                                                        num_classes=self.num_classes)
 
-    def forward(self, input_ids, attention_mask, labels=None):
-        outputs = self.bert(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
-        return outputs
+    def forward(self, input_ids, attention_mask):
+        outputs = self.bert(input_ids=input_ids, attention_mask=attention_mask)
+
+        h_cls = outputs.last_hidden_state[:, 0]
+        logits = self.W(h_cls)
+        return logits
 
     def training_step(self, batch, batch_idx):
-        outputs = self.forward(batch['input_ids'], batch['attention_mask'], labels=batch['label'])
-        # loss = F.cross_entropy(logits, batch['label'])
-        preds = torch.argmax(outputs.logits, 1)
+        logits = self.forward(batch['input_ids'], batch['attention_mask'])
+        loss = F.cross_entropy(logits, batch['label'])
+        preds = torch.argmax(logits, dim=1)
         train_acc = self.train_accuracy_metric(preds, batch['label'])
-        self.log('train/loss', outputs.loss, prog_bar=True, on_epoch=True)
+        
+        self.log('train/loss', loss, prog_bar=True, on_epoch=True)
         self.log('train/acc', train_acc, prog_bar=True, on_epoch=True)
-        return outputs.loss
+        return loss
 
     def validation_step(self, batch, batch_idx):
         labels = batch['label']
-        outputs = self.forward(batch['input_ids'], batch['attention_mask'],
-                               labels=batch['label'])
-        preds = torch.argmax(outputs.logits, 1)
+
+        logits = self.forward(batch['input_ids'], batch['attention_mask'])
+        preds = torch.argmax(logits, dim=1)
+        loss = F.cross_entropy(logits, batch['label'])
 
         # Metrics
         valid_acc = self.val_accuracy_metric(preds, labels)
@@ -59,7 +67,7 @@ class ColaModel(pl.LightningModule):
         f1 = self.f1_metric(preds, labels)
 
         # Logging metrics
-        self.log('valid/loss', outputs.loss, prog_bar=True, on_step=True)
+        self.log('valid/loss', loss, prog_bar=True, on_step=True)
         self.log('valid/acc', valid_acc, prog_bar=True, on_epoch=True)
         self.log('valid/precision_macro', precision_macro, prog_bar=True, on_epoch=True)
         self.log('valid/recall_macro', recall_macro, prog_bar=True, on_epoch=True)
@@ -67,7 +75,7 @@ class ColaModel(pl.LightningModule):
         self.log('valid/recall_micro', recall_micro, prog_bar=True, on_epoch=True)
         self.log('valid/f1', f1, prog_bar=True, on_epoch=True)
 
-        result = {'labels': labels, 'logits': outputs.logits}
+        result = {'labels': labels, 'logits': logits}
         self.validation_step_outputs.append(result)
         return result
 
@@ -96,14 +104,10 @@ class ColaModel(pl.LightningModule):
         df_cm.index.name = 'Actual'
         df_cm.columns.name = 'Predicted'
         plt.figure(figsize=(7, 4))
-        plot = sns.heatmap(
-            df_cm, cmap='Blues', annot=True, annot_kws={'size': 16}
-        )  # font size
+        plot = sns.heatmap(df_cm, cmap='Blues', annot=True, annot_kws={'size': 16})  # font size
         self.logger.experiment.log({'Confusion Matrix': wandb.Image(plot)})
 
-        self.logger.experiment.log(
-            {'roc': wandb.plot.roc_curve(labels.numpy(), logits.numpy())}
-        )
+        self.logger.experiment.log({'roc': wandb.plot.roc_curve(labels.numpy(), logits.numpy())})
         self.validation_step_outputs.clear()  # free memory
 
     def configure_optimizers(self):
