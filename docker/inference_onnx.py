@@ -1,8 +1,7 @@
 import numpy as np
 import onnxruntime as ort
-from scipy.special import softmax
-
 from data import DataModule
+from scipy.special import softmax
 from utils import timing
 
 
@@ -25,7 +24,7 @@ class ColaONNXPredictor:
         scores = softmax(ort_outs[0])[0]
         predictions = []
         for score, label in zip(scores, self.lables):
-            predictions.append({"label": label, "score": score})
+            predictions.append({"label": label, "score": float(score)})
         return predictions
 
 
