@@ -6,7 +6,7 @@ from transformers import AutoTokenizer
 
 
 class DataModule(pl.LightningDataModule):
-    def __init__(self, model_name='google/bert_uncased_L-2_H-128_A-2', batch_size=64, max_length=512, num_workers=3):
+    def __init__(self, model_name='google/bert_uncased_L-2_H-128_A-2', batch_size=64, max_length=128, num_workers=3):
         super().__init__()
 
         self.batch_size = batch_size

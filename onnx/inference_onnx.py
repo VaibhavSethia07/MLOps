@@ -1,8 +1,7 @@
 import numpy as np
 import onnxruntime as ort
-from scipy.special import softmax
-
 from data import DataModule
+from scipy.special import softmax
 from utils import timing
 
 
