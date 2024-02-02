@@ -46,8 +46,8 @@ def main(cfg):
 
     cola_data = DataModule(cfg.model.tokenizer, cfg.processing.batch_size, cfg.processing.max_length)
     cola_model = ColaModel(cfg.model.name)
-
-    checkpoint_callback = ModelCheckpoint(dirpath='./models', filename="best-checkpoint",
+    root_dir = hydra.utils.get_original_cwd()
+    checkpoint_callback = ModelCheckpoint(dirpath=f'{root_dir}/models', filename="best-checkpoint",
                                           monitor='valid/loss', mode='min')
     early_stopping_callback = EarlyStopping(monitor='valid/loss', patience=3, verbose=True, mode='min')
 
