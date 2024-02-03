@@ -4,14 +4,19 @@ from fastapi import FastAPI
 from inference_onnx import ColaONNXPredictor
 from train import main
 
-app = FastAPI(title='MLOps App')
+summary = '''This is an application powered by NLP. 
+This app can classify a sentence into one of the two classes.
+❌ Unacceptable: Grammatically not correct
+✅ Acceptable: Grammatically correct
+'''
+app = FastAPI(title='MLOps App', summary=summary)
 # load the model
 predictor = ColaONNXPredictor('./models/model.onnx')
 
 
 @app.get('/')
 def home():
-    return '<h2>This is a NLP project</h2>'
+    return summary
 
 
 @app.get('/predict')
