@@ -1,5 +1,7 @@
 [core]
+    remote = storage
     autostage = true
-    remote = myremote
-['remote "myremote"']
-    url = gdrive://1f8XnfuG0KdTWR_nGaWzqwz1DekOG1uJv
+['remote "storage"']
+    url = gdrive://1r8ooyAQuFeA2t78aMALTb28oCOKJuPRK
+    gdrive_use_service_account = true
+    gdrive_service_account_json_file_path = ../creds.json
