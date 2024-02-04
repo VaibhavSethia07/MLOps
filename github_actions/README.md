@@ -120,3 +120,5 @@ conda install ipykernel
 python -m ipykernel install --user --name project-setup
 pip install ipywidgets
 ```
+
+## Place the creds.json (Google Service Account file) in the directory where you want to build image
