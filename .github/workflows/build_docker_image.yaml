@@ -1,0 +1,30 @@
+name: Create Docker Container
+
+on: [push]
+
+jobs:
+  mlops-container:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working_directory: ./github_actions
+    steps:
+      - name: Checkout Reposiotry
+        uses: actions/checkout@v4
+        with:
+        # Repository name with owner. For example, actions/checkout
+        repository: ${{ github.repository }}
+        # The branch, tag or SHA to checkout. When checking out the repository that
+        # triggered a workflow, this defaults to the reference or SHA for that event.
+        # Otherwise, uses the default branch.
+        ref: ${{ github.ref }}
+        show-progress: true
+      
+      - name: Build Docker Image
+        run: |
+          docker network rm data
+          docker network create data
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          IMAGE_TAG=$(git describe --tags --always)
+          docker build --tag inference:latest --tag inference:$IMAGE_TAG --tag inference:$COMMIT_HASH .
+          docker run -d -p 8000:8000 --network data --name inference_container:latest
