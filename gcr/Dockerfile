@@ -1,13 +1,15 @@
-FROM huggingface/transformers-pytorch-cpu:latest
+ghFROM huggingface/transformers-pytorch-cpu:latest
 
 COPY ./ /app
 WORKDIR /app
 
-ARG CREDENTIAL_FILE_PATH
+ARG GCP_CREDENTIALS_JSON
+ARG GCP_PROJECT_ID
+ARG GCS_TRAINED_MODELS_BUCKET_URI
 
 RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg && apt-get update -y && apt-get install google-cloud-sdk -y
     
-RUN gcloud auth activate-service-account --key-file=$CREDENTIAL_FILE_PATH
+RUN gcloud auth activate-service-account --key-file=$GCP_CREDENTIALS_JSON
 
 # install requirements
 RUN pip install "dvc[gcs]"   # since gcs is the remote storage
@@ -18,9 +20,9 @@ RUN pip install -r requirements.txt
 RUN dvc init --no-scm
 
 # configuring remote server in dvc
-RUN dvc remote add -d model-store gs://models-dvc-04-02-2024/trained-models
-RUN dvc remote modify model-store projectname mlops-413215
-RUN dvc remote modify --local model-store credentialpath $CREDENTIAL_FILE_PATH
+RUN dvc remote add -d model-store $GCS_TRAINED_MODELS_BUCKET_URI
+RUN dvc remote modify model-store projectid $GCP_PROJECT_ID
+RUN dvc remote modify --local model-store credentialpath $GCP_CREDENTIALS_JSON
 
 RUN cat .dvc/config
 
