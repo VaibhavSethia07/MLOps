@@ -63,8 +63,6 @@ jobs:
             echo "Commit Hash: $COMMIT_HASH"
             echo "Image Tag: $IMAGE_TAG"
 
-            ls ${{ github.workspace }}
-            
             docker buildx build \
               --no-cache \
               --progress auto \
@@ -72,8 +70,8 @@ jobs:
               --build-arg GCP_PROJECT_ID="${{ secrets.GCP_PROJECT_ID }}" \
               --build-arg GCS_TRAINED_MODELS_BUCKET_URI="$GCS_TRAINED_MODELS_BUCKET_URI" \
               --tag inference:latest \
-              --tag inference:${{ github.sha }} \
-              --tag inference:${{ github.event_name }} \
+              --tag inference:$IMAGE_TAG \
+              --tag inference:$COMMIT_HASH \
               -f Dockerfile .
 
             docker run -d -p 8000:8000 --name inference_container inference:latest
