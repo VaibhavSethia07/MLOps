@@ -24,10 +24,7 @@ jobs:
         uses: nightstory/gcp-secrets-action@v1
         with:
           gcp_credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
-          gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
-          gcs_trained_models_bucket_uri: ${{ secrets.GCS_TRAINED_MODELS_BUCKET_URI }}
-          gcr_repository: ${{ secrets.GCR_REPOSITORY }}
-          gcr_host: ${{ secrets.GCR_HOST}}
+          template_file: ../template.yaml
 
       # - name: Build Docker Image
       #   run: |
