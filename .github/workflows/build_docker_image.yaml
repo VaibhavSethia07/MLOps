@@ -59,9 +59,6 @@ jobs:
             docker buildx build \
               --no-cache \
               --progress auto \
-              --build-arg GCP_CREDENTIALS_JSON="${{ secrets.GCP_CREDENTIALS_JSON }}" \
-              --build-arg GCP_PROJECT_ID="${{ secrets.GCP_PROJECT_ID }}" \
-              --build-arg GCS_TRAINED_MODELS_BUCKET_URI="${{ vars.GCS_TRAINED_MODELS_BUCKET_URI }}" \
               --tag inference:latest \
               -f Dockerfile .
             docker run -d -p 8000:8000 --name inference_container inference:latest
