@@ -1,7 +1,10 @@
 [core]
-    remote = storage
+    remote = model-store
     autostage = true
 ['remote "storage"']
     url = gdrive://1r8ooyAQuFeA2t78aMALTb28oCOKJuPRK
     gdrive_use_service_account = true
     gdrive_service_account_json_file_path = ../github_actions/creds.json
+['remote "model-store"']
+    url = gs://models-dvc-04-02-2024/trained-models
+    projectname = mlops-413215
