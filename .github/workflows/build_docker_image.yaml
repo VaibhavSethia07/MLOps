@@ -28,16 +28,16 @@ jobs:
 
       - name: Build Docker Image
         run: |
-            echo "GCP Credentials JSON: ${{ secrets.GCP_CREDENTIALS_JSON }}"
-            echo "Project ID: ${{ secrets.GCP_PROJECT_ID }}"
-            echo "Trained Models Bucket URI: ${{ secrets.GCS_TRAINED_MODELS_BUCKET_URI }}"
-            echo "GCR Repository: ${{ secrets.GCR_REPOSITORY }}"
-            echo "GCR Host: ${{ secrets.GCR_HOST }}"
+            echo "Trained Models Bucket URI: ${{ env.GCS_TRAINED_MODELS_BUCKET_URI }}"
+            echo "GCR Repository: ${{ env.GCR_REPOSITORY }}"
+            echo "GCR Host: ${{ env.GCR_HOST }}"
+
             COMMIT_HASH=$(git rev-parse --short HEAD)
             IMAGE_TAG=$(git describe --tags --always)
+            
             docker build --build-arg GCP_CREDENTIALS_JSON=${{ secrets.GCP_CREDENTIALS_JSON }} \
                         --build-arg GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }} \
-                        --build-arg GCS_TRAINED_MODELS_BUCKET_URI=${{ secrets.GCS_TRAINED_MODELS_BUCKET_URI }} \
+                        --build-arg GCS_TRAINED_MODELS_BUCKET_URI=${{ env.GCS_TRAINED_MODELS_BUCKET_URI }} \
                         --tag inference:latest --tag inference:$IMAGE_TAG --tag inference:$COMMIT_HASH .
             docker run -d -p 8000:8000 --name inference_container inference:latest
 
