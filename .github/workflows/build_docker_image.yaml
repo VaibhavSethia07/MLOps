@@ -6,9 +6,9 @@ jobs:
   mlops-container:
     runs-on: ubuntu-latest
     env:
-      GCS_TRAINED_MODELS_BUCKET_URI: ${{ env.GCS_TRAINED_MODELS_BUCKET_URI }}
-      GCR_HOST: ${{ env.GCR_HOST }}
-      GCR_REPOSITORY: ${{ env.GCR_REPOSITORY }}
+      GCS_TRAINED_MODELS_BUCKET_URI: ${{ vars.GCS_TRAINED_MODELS_BUCKET_URI }}
+      GCR_HOST: ${{ vars.GCR_HOST }}
+      GCR_REPOSITORY: ${{ vars.GCR_REPOSITORY }}
 
 
     defaults:
@@ -44,7 +44,7 @@ jobs:
 
             docker build --build-arg GCP_CREDENTIALS_JSON=${{ secrets.GCP_CREDENTIALS_JSON }} \
                         --build-arg GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }} \
-                        --build-arg GCS_TRAINED_MODELS_BUCKET_URI=${{ env.GCS_TRAINED_MODELS_BUCKET_URI }} \
+                        --build-arg GCS_TRAINED_MODELS_BUCKET_URI=$GCS_TRAINED_MODELS_BUCKET_URI \
                         --tag inference:latest --tag inference:$IMAGE_TAG --tag inference:$COMMIT_HASH .
             docker run -d -p 8000:8000 --name inference_container inference:latest
 
