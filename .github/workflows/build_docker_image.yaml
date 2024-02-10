@@ -10,10 +10,14 @@ jobs:
       GCR_HOST: ${{ vars.GCR_HOST }}
       GCR_REPOSITORY: ${{ vars.GCR_REPOSITORY }}
 
-
     defaults:
       run:
         working-directory: ./gcr
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
     steps:
       - name: Checkout Reposiotry
         uses: actions/checkout@v4
@@ -31,6 +35,11 @@ jobs:
         with:
           gcp_credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
           template_file: ./.github/template.yaml
+      
+      - name: Authenticate to Google Cloud
+      - uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS_JSON  }}'
 
       - name: Build Docker Image
         run: |
@@ -44,7 +53,7 @@ jobs:
             echo "Commit Hash: $COMMIT_HASH"
             echo "Image Tag: $IMAGE_TAG"
 
-            docker build --tag inference:latest --tag inference:$IMAGE_TAG --tag inference:$COMMIT_HASH .
+            docker build --build-arg GCP_CREDENTIALS_JSON=${{ secrets.GCP_CREDENTIALS_JSON }} --build-arg GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }} --build-arg GCS_TRAINED_MODELS_BUCKET_URI=$GCS_TRAINED_MODELS_BUCKET_URI --tag inference:latest --tag inference:$IMAGE_TAG --tag inference:$COMMIT_HASH .
             docker run -d -p 8000:8000 --name inference_container inference:latest
 
 
