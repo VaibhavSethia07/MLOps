@@ -10,7 +10,7 @@ jobs:
         working-directory: ./gcr
     steps:
       - name: Checkout Reposiotry
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           # Repository name with owner. For example, actions/checkout
           repository: ${{ github.repository }}
@@ -18,17 +18,16 @@ jobs:
           # triggered a workflow, this defaults to the reference or SHA for that event.
           # Otherwise, uses the default branch.
           ref: ${{ github.ref }}
-          show-progress: true
-          # token: ${{ secrets.GITHUB_TOKEN }}
+          # token: ${{ env.GITHUB_TOKEN }}
 
-      # - name: Configure GCP Credentials
-      #   uses: nightstory/gcp-secrets-action@v1
-      #   with:
-      #     gcp_credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
-      #     gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
-      #     gcs_trained_models_bucket_uri: ${{ secrets.GCS_TRAINED_MODELS_BUCKET_URI }}
-      #     gcr_repository: ${{ secrets.GCR_REPOSITORY }}
-      #     gcr_host: ${{ secrets.GCR_HOST}}
+      - name: Configure GCP Credentials
+        uses: nightstory/gcp-secrets-action@v1
+        with:
+          gcp_credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
+          gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
+          gcs_trained_models_bucket_uri: ${{ secrets.GCS_TRAINED_MODELS_BUCKET_URI }}
+          gcr_repository: ${{ secrets.GCR_REPOSITORY }}
+          gcr_host: ${{ secrets.GCR_HOST}}
 
       # - name: Build Docker Image
       #   run: |
