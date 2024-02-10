@@ -45,6 +45,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
+            echo "GCP Credentials JSON: ${{ secrets.GCP_CREDENTIALS_JSON }}"
             echo "Trained Models Bucket URI: $GCS_TRAINED_MODELS_BUCKET_URI"
             echo "GCR Host: $GCR_HOST"
             echo "GCR Repository: $GCR_REPOSITORY"
