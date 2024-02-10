@@ -55,7 +55,14 @@ jobs:
             echo "Commit Hash: $COMMIT_HASH"
             echo "Image Tag: $IMAGE_TAG"
 
-            docker buildx build --no-cache --progress auto --build-arg GCP_CREDENTIALS_JSON=${{ secrets.GCP_CREDENTIALS_JSON }} --build-arg GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }} --build-arg GCS_TRAINED_MODELS_BUCKET_URI=$GCS_TRAINED_MODELS_BUCKET_URI --tag inference:latest --tag inference:$IMAGE_TAG --tag inference:$COMMIT_HASH -f Dockerfile .
+            docker buildx build \
+              --no-cache \
+              --progress auto \
+              --build-arg GCP_CREDENTIALS_JSON="${{ secrets.GCP_CREDENTIALS_JSON }}" \
+              --build-arg GCP_PROJECT_ID="${{ secrets.GCP_PROJECT_ID }}" \
+              --build-arg GCS_TRAINED_MODELS_BUCKET_URI="$GCS_TRAINED_MODELS_BUCKET_URI" \
+              --tag inference:latest \
+              -f Dockerfile .
             docker run -d -p 8000:8000 --name inference_container inference:latest
 
 
