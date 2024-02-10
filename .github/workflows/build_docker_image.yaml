@@ -37,9 +37,11 @@ jobs:
           template_file: ./.github/template.yaml
       
       - name: Authenticate to Google Cloud
+        id: 'auth'
         uses: 'google-github-actions/auth@v2'
         with:
-          credentials_json: '${{ secrets.GCP_CREDENTIALS_JSON  }}'
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          workload_identity_provider: 'projects/343693069423/locations/global/workloadIdentityPools/github/providers/mlops'
 
       - name: Build Docker Image
         run: |
