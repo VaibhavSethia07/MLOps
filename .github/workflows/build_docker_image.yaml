@@ -43,9 +43,16 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           workload_identity_provider: 'projects/343693069423/locations/global/workloadIdentityPools/github/providers/mlops'
 
+      - name: Secrets to file
+        uses: mobiledevops/secret-to-file-action@v1
+        with:
+          base64-encoded-secret: ${{ secrets.GCP_CREDENTIALS_JSON }}
+          filename: "gcp-credentials.json"
+          is-executable: true
+          working-directory: "./gcr"
+
       - name: Build Docker Image
         run: |
-            echo "GCP Credentials JSON: ${{ secrets.GCP_CREDENTIALS_JSON }}"
             echo "Trained Models Bucket URI: $GCS_TRAINED_MODELS_BUCKET_URI"
             echo "GCR Host: $GCR_HOST"
             echo "GCR Repository: $GCR_REPOSITORY"
@@ -56,11 +63,18 @@ jobs:
             echo "Commit Hash: $COMMIT_HASH"
             echo "Image Tag: $IMAGE_TAG"
 
+
             docker buildx build \
               --no-cache \
               --progress auto \
+              --build-arg GCP_CREDENTIALS_JSON=./gcr/gcp-credentials.json \
+              --build-arg GCP_PROJECT_ID="${{ secrets.GCP_PROJECT_ID }}" \
+              --build-arg GCS_TRAINED_MODELS_BUCKET_URI="$GCS_TRAINED_MODELS_BUCKET_URI" \
               --tag inference:latest \
+              --tag inference:${{ github.sha }} \
+              --tag inference:${{ github.event_name }} \
               -f Dockerfile .
+
             docker run -d -p 8000:8000 --name inference_container inference:latest
 
 
