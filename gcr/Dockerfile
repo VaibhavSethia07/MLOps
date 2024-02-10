@@ -21,7 +21,7 @@ RUN dvc init --no-scm
 
 # configuring remote server in dvc
 RUN dvc remote add -d model-store $GCS_TRAINED_MODELS_BUCKET_URI
-RUN dvc remote modify model-store projectid $GCP_PROJECT_ID
+RUN dvc remote modify model-store projectname $GCP_PROJECT_ID
 RUN dvc remote modify --local model-store credentialpath $GCP_CREDENTIALS_JSON
 
 RUN cat .dvc/config

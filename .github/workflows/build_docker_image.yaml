@@ -43,7 +43,7 @@ jobs:
             IMAGE_TAG=$(git describe --tags --always)
 
             echo "Commit Hash: $COMMIT_HASH"
-            echo "Image tag: $IMAGE_TAG"
+            echo "Image Tag: $IMAGE_TAG"
 
             docker build --build-arg GCP_CREDENTIALS_JSON=${{ secrets.GCP_CREDENTIALS_JSON }} \
                         --build-arg GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }} \
