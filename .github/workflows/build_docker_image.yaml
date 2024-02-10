@@ -28,6 +28,11 @@ jobs:
 
       - name: Build Docker Image
         run: |
+            echo "GCP Credentials JSON: $GCP_CREDENTIALS_JSON"
+            echo "Project ID: $GCP_PROJECT_ID"
+            echo "Trained Models Bucket URI: $GCS_TRAINED_MODELS_BUCKET_URI"
+            echo "GCR Repository: $GCR_REPOSITORY"
+            echo "GCR Host: $GCR_HOST"
             COMMIT_HASH=$(git rev-parse --short HEAD)
             IMAGE_TAG=$(git describe --tags --always)
             docker build --build-arg GCP_CREDENTIALS_JSON="$GCP_CREDENTIALS_JSON" \
