@@ -1,3 +1,4 @@
+gcp_credentials_json: ${GCP_CREDENTIALS_JSON}
 gcp_project_id: ${GCP_PROJECT_ID}
 gcs_trained_models_bucket_uri: ${GCS_TRAINED_MODELS_BUCKET_URI}
 gcr_repository: ${GCR_REPOSITORY}
