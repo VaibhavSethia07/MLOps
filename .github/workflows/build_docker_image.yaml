@@ -7,23 +7,44 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./github_actions
+        working-directory: ./gcr
     steps:
       - name: Checkout Reposiotry
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
         with:
-        # Repository name with owner. For example, actions/checkout
-        repository: ${{ github.repository }}
-        # The branch, tag or SHA to checkout. When checking out the repository that
-        # triggered a workflow, this defaults to the reference or SHA for that event.
-        # Otherwise, uses the default branch.
-        ref: ${{ github.ref }}
-        show-progress: true
-      
-      - name: Build Docker Image
-        run: |
-          docker network create data
-          COMMIT_HASH=$(git rev-parse --short HEAD)
-          IMAGE_TAG=$(git describe --tags --always)
-          docker build --tag inference:latest --tag inference:$IMAGE_TAG --tag inference:$COMMIT_HASH .
-          docker run -d -p 8000:8000 --network data --name inference_container inference:latest
+          # Repository name with owner. For example, actions/checkout
+          repository: ${{ github.repository }}
+          # The branch, tag or SHA to checkout. When checking out the repository that
+          # triggered a workflow, this defaults to the reference or SHA for that event.
+          # Otherwise, uses the default branch.
+          ref: ${{ github.ref }}
+          show-progress: true
+          # token: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Configure GCP Credentials
+      #   uses: nightstory/gcp-secrets-action@v1
+      #   with:
+      #     gcp_credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
+      #     gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
+      #     gcs_trained_models_bucket_uri: ${{ secrets.GCS_TRAINED_MODELS_BUCKET_URI }}
+      #     gcr_repository: ${{ secrets.GCR_REPOSITORY }}
+      #     gcr_host: ${{ secrets.GCR_HOST}}
+
+      # - name: Build Docker Image
+      #   run: |
+      #     COMMIT_HASH=$(git rev-parse --short HEAD)
+      #     IMAGE_TAG=$(git describe --tags --always)
+      #                   --build-arg GCP_PROJECT_ID=$GCP_PROJECT_ID
+      #                   --build-arg GCS_TRAINED_MODELS_BUCKET_URI=$GCS_TRAINED_MODELS_BUCKET_URI
+      #                   --tag inference:latest --tag inference:$IMAGE_TAG --tag inference:$COMMIT_HASH .
+      #     docker run -d -p 8000:8000 --name inference_container inference:latest
+
+      # - name: Push Docker Image to GCR
+      #   uses: raccoondev/push-docker-gcr
+      #   with:
+      #     gcr_host: ${{ variables.GCR_HOST}}
+      #     image_name: ${{ secrets.GCP_PROJECT_ID }}/${{ variables.GCR_REPOSITORY }}/inference
+      #     image_tag: latest
+          # env:
+          #   GCLOUD_SERVICE_KEY: ${{ secrets.GCP_CREDENTIALS_JSON }}
+          #   GOOGLE_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
