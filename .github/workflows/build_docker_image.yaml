@@ -44,11 +44,11 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          token_format: 'id_token'
+          # token_format: 'id_token'
           workload_identity_provider: 'projects/343693069423/locations/global/workloadIdentityPools/github/providers/mlops'
-          id_token_audience: 'projects/343693069423/locations/global/workloadIdentityPools/github/providers/mlops'
+          # id_token_audience: 'projects/343693069423/locations/global/workloadIdentityPools/github/providers/mlops'
           service_account: 'model-884@mlops-413215.iam.gserviceaccount.com'
-          create_credentials_file: true
+          # create_credentials_file: true
 
       - name: Secrets to file
         uses: mobiledevops/secret-to-file-action@v1
@@ -96,5 +96,5 @@ jobs:
             docker images | grep inference
             gcloud auth activate-service-account --key-file=gcp-credentials.json
             gcloud auth configure-docker $GCR_HOST -q
-            gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
+            gcloud auth login --brief --cred-file="gcp-credentials.json"
             docker push $GCR_HOST/${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference
