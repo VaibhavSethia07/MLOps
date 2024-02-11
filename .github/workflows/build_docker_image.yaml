@@ -54,8 +54,6 @@ jobs:
       - name: Build Docker Image
         run: |
             echo "Trained Models Bucket URI: $GCS_TRAINED_MODELS_BUCKET_URI"
-            echo "GCR Host: $GCR_HOST"
-            echo "GCR Repository: $GCR_REPOSITORY"
 
             COMMIT_HASH=$(git rev-parse --short HEAD)
             IMAGE_TAG=$(git describe --tags --always)
@@ -79,9 +77,12 @@ jobs:
 
       - name: Push Docker Image to GCR
         uses: RaccoonDev/push-docker-gcr@v1
+        run: |
+            echo "GCR Host: $GCR_HOST"
+            echo "GCR Repository: $GCR_REPOSITORY"
         with:
-          gcr_host: ${{ variables.GCR_HOST}}
-          image_name: ${{ secrets.GCP_PROJECT_ID }}/${{ variables.GCR_REPOSITORY }}/inference
+          gcr_host: $GCR_HOST
+          image_name: ${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference
           image_tag: latest
           env:
             GCLOUD_SERVICE_KEY: gcp-credentials.json
