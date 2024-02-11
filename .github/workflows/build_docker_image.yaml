@@ -25,13 +25,8 @@ jobs:
       - name: Checkout Reposiotry
         uses: actions/checkout@v4
         with:
-          # Repository name with owner. For example, actions/checkout
           repository: ${{ github.repository }}
-          # The branch, tag or SHA to checkout. When checking out the repository that
-          # triggered a workflow, this defaults to the reference or SHA for that event.
-          # Otherwise, uses the default branch.
           ref: ${{ github.ref }}
-          # token: ${{ env.GITHUB_TOKEN }}
 
       - name: Configure GCP Credentials
         uses: nightstory/gcp-secrets-action@v1
@@ -44,11 +39,8 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          # token_format: 'id_token'
           workload_identity_provider: 'projects/343693069423/locations/global/workloadIdentityPools/github/providers/mlops'
-          # id_token_audience: 'projects/343693069423/locations/global/workloadIdentityPools/github/providers/mlops'
           service_account: 'model-884@mlops-413215.iam.gserviceaccount.com'
-          # create_credentials_file: true
 
       - name: Secrets to file
         uses: mobiledevops/secret-to-file-action@v1
@@ -90,3 +82,8 @@ jobs:
             gcloud auth activate-service-account --key-file=gcp-credentials.json
             gcloud auth configure-docker $GCR_HOST -q
             docker push $GCR_HOST/${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference
+
+      
+      - name: Deploy service to Cloud Run
+        run: |
+            gcloud run deploy --image $GCR_HOST/${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference --max-instances=3
