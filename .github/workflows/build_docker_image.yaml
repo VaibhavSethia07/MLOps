@@ -73,6 +73,13 @@ jobs:
 
             docker run -d -p 8000:8000 --name inference_container inference:latest
 
+      - name: Login to Google Artifact Registry
+        uses: docker/login-action@v3
+        with:
+          registry: $GCR_HOST
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
+
       - name: Push Docker Image to GCR
         run: |
             echo "GCR Host: $GCR_HOST"
@@ -82,5 +89,4 @@ jobs:
             docker images | grep inference
             gcloud auth activate-service-account --key-file=gcp-credentials.json
             gcloud auth configure-docker $GCR_HOST -q
-            gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://$GCR_HOST
             docker push $GCR_HOST/${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference:latest
