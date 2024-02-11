@@ -72,7 +72,6 @@ jobs:
               --tag inference:$COMMIT_HASH \
               -f Dockerfile .
 
-            docker images
             docker run -d -p 8000:8000 --name inference_container inference:latest
 
 
@@ -81,5 +80,7 @@ jobs:
             echo "GCR Host: $GCR_HOST"
             
             docker tag inference:latest $GCR_HOST/${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference:latest
-            gcloud auth configure-docker $GCR_HOST -y
+            
+            docker images | grep inference
+            gcloud auth configure-docker $GCR_HOST
             docker push $GCR_HOST/${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference:latest
