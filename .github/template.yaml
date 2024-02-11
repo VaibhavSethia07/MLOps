@@ -3,3 +3,4 @@ gcp_project_id: ${GCP_PROJECT_ID}
 gcs_trained_models_bucket_uri: ${GCS_TRAINED_MODELS_BUCKET_URI}
 gcr_repository: ${GCR_REPOSITORY}
 gcr_host: ${GCR_HOST}
+gcp_service_account_email: ${GCP_SERVICE_ACCOUNT_EMAIL}
