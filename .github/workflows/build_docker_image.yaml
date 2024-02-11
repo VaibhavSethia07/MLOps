@@ -11,6 +11,7 @@ jobs:
       GCS_TRAINED_MODELS_BUCKET_URI: ${{ vars.GCS_TRAINED_MODELS_BUCKET_URI }}
       GCR_HOST: ${{ vars.GCR_HOST }}
       GCR_REPOSITORY: ${{ vars.GCR_REPOSITORY }}
+      GCP_SERVICE_ACCOUNT_EMAIL: ${{ vars.GCP_SERVICE_ACCOUNT_EMAIL }}
 
     defaults:
       run:
@@ -45,7 +46,7 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           token_format: access_token
           workload_identity_provider: 'projects/343693069423/locations/global/workloadIdentityPools/github/providers/mlops'
-          service_account: ${{ secrets.GCP_CREDENTIALS_JSON }}
+          service_account: $GCP_SERVICE_ACCOUNT_EMAIL
 
       - name: Secrets to file
         uses: mobiledevops/secret-to-file-action@v1
