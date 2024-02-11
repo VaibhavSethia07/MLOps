@@ -136,3 +136,5 @@ dmypy.json
 .DS_Store
 */.DS_Store
 gha-creds-*.json
+
+creds.json

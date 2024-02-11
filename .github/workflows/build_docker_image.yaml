@@ -89,5 +89,4 @@ jobs:
             docker images | grep inference
             gcloud auth activate-service-account --key-file=gcp-credentials.json
             gcloud auth configure-docker $GCR_HOST -q
-            gcloud auth login --brief --cred-file="gcp-credentials.json"
             docker push $GCR_HOST/${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference
