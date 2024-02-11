@@ -36,12 +36,12 @@ jobs:
           gcp_credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
           template_file: ./.github/template.yaml
       
-      - name: Authenticate to Google Cloud
-        id: 'auth'
-        uses: 'google-github-actions/auth@v2'
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          workload_identity_provider: 'projects/343693069423/locations/global/workloadIdentityPools/github/providers/mlops'
+      # - name: Authenticate to Google Cloud
+      #   id: 'auth'
+      #   uses: 'google-github-actions/auth@v2'
+      #   with:
+      #     project_id: ${{ secrets.GCP_PROJECT_ID }}
+      #     workload_identity_provider: 'projects/343693069423/locations/global/workloadIdentityPools/github/providers/mlops'
 
       - name: Secrets to file
         uses: mobiledevops/secret-to-file-action@v1
@@ -77,12 +77,12 @@ jobs:
             docker run -d -p 8000:8000 --name inference_container inference:latest
 
 
-      # - name: Push Docker Image to GCR
-      #   uses: raccoondev/push-docker-gcr
-      #   with:
-      #     gcr_host: ${{ variables.GCR_HOST}}
-      #     image_name: ${{ secrets.GCP_PROJECT_ID }}/${{ variables.GCR_REPOSITORY }}/inference
-      #     image_tag: latest
-          # env:
-          #   GCLOUD_SERVICE_KEY: ${{ secrets.GCP_CREDENTIALS_JSON }}
-          #   GOOGLE_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      - name: Push Docker Image to GCR
+        uses: raccoondev/push-docker-gcr
+        with:
+          gcr_host: ${{ variables.GCR_HOST}}
+          image_name: ${{ secrets.GCP_PROJECT_ID }}/${{ variables.GCR_REPOSITORY }}/inference
+          image_tag: latest
+          env:
+            GCLOUD_SERVICE_KEY: gcp-credentials.json
+            GOOGLE_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
