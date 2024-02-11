@@ -82,4 +82,5 @@ jobs:
             docker images | grep inference
             gcloud auth activate-service-account --key-file=gcp-credentials.json
             gcloud auth configure-docker $GCR_HOST -q
+            gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://$GCR_HOST
             docker push $GCR_HOST/${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference:latest
