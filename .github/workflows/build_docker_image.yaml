@@ -77,9 +77,6 @@ jobs:
 
       - name: Push Docker Image to GCR
         uses: RaccoonDev/push-docker-gcr@v1
-        run: |
-            echo "GCR Host: $GCR_HOST"
-            echo "GCR Repository: $GCR_REPOSITORY"
         with:
           gcr_host: $GCR_HOST
           image_name: ${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference
