@@ -74,7 +74,6 @@ jobs:
 
             docker run -d -p 8000:8000 --name inference_container inference:latest
 
-
       - name: Push Docker Image to GCR
         run: |
             echo "GCR Host: $GCR_HOST"
@@ -82,5 +81,6 @@ jobs:
             docker tag inference:latest $GCR_HOST/${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference:latest
             
             docker images | grep inference
+            gcloud auth activate-service-account --key-file=gcp-credentials.json
             gcloud auth configure-docker $GCR_HOST
             docker push $GCR_HOST/${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference:latest
