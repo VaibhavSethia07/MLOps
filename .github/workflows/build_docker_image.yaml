@@ -46,7 +46,6 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           token_format: access_token
           workload_identity_provider: 'projects/343693069423/locations/global/workloadIdentityPools/github/providers/mlops'
-          service_account: 'model-884@mlops-413215.iam.gserviceaccount.com'
 
       - name: Secrets to file
         uses: mobiledevops/secret-to-file-action@v1
