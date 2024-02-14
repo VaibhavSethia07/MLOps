@@ -86,4 +86,4 @@ jobs:
       
       - name: Deploy service to Cloud Run
         run: |
-            gcloud run deploy inference --image $GCR_HOST/${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference --max-instances=4 --platform managed --region asia-south1 --allow-unauthenticated --container-env-file ./.github/env.yaml --container-command uvicorn --container-arg "app:app" --container-arg "--host" --container-arg "0.0.0.0" --container-arg "--port" --container-arg "8000"
+            gcloud run deploy inference --image $GCR_HOST/${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference --max-instances=4 --platform managed --region asia-south1 --allow-unauthenticated --container-env-file ./.github/env.yaml --container-command uvicorn --container-arg "app:app" --container-arg "--host" --container-arg "0.0.0.0" --container-arg "--port" --container-arg 8000
