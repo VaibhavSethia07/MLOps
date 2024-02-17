@@ -138,3 +138,4 @@ dmypy.json
 gha-creds-*.json
 
 creds.json
+outputs

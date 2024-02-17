@@ -2,7 +2,7 @@ name: CI MLOps
 
 on:
   push:
-    branches: main
+    branches: dev
 
 jobs:
   mlops-container:
@@ -15,7 +15,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./gcr
+        working-directory: ./
 
     permissions:
       contents: 'read'
@@ -48,7 +48,7 @@ jobs:
           base64-encoded-secret: ${{ secrets.GCP_CREDENTIALS_JSON }}
           filename: "gcp-credentials.json"
           is-executable: true
-          working-directory: "./gcr"
+          working-directory: "./"
 
       - name: Build Docker Image
         run: |

@@ -1,0 +1,7 @@
+version: '3'
+services:
+  mlops_app:
+    build: .
+    container_name: 'mlops_container'
+    ports:
+      - '8000:8000'
