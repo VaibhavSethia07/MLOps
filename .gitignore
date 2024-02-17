@@ -139,3 +139,4 @@ gha-creds-*.json
 
 creds.json
 outputs
+.dvc
