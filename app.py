@@ -3,12 +3,12 @@ from typing import List
 from fastapi import FastAPI
 from inference_onnx import ColaONNXPredictor
 from opentelemetry import trace
-from opentelemetry.sdk.trace import TraceProvider
+from opentelemetry.sdk.trace import TracerProvider
 from train import main
 
-provider = TraceProvider()
+provider = TracerProvider()
 trace.set_tracer_provider(provider)
-tracer = tracer.get_tracer(__name__)
+tracer = trace.get_tracer(__name__)
 
 summary = '''This is an application powered by NLP. 
 This app can classify a sentence into one of the two classes.
