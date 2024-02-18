@@ -8,13 +8,24 @@ The goal of the series is to understand the basics of MLOps like model building,
 
 ![pl](images/summary.png)
 
-## Installation
+## Project Setup
 1. Install Rust compiler. This is needed for `tokenizer` package
     ```sh
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     source $HOME/.cargo/env
+    pip install -r requirements.txt
     ```
-2. 
+
+2. Pull the model from remote storage
+    ```sh
+    dvc remote add -d model-store <GCS-Bucket/Object-URI>
+    dvc remote modify model-store projectname <GCP-Project-ID>
+    ```
+
+3. Get the predictions
+    ```python
+    python3 inference.py
+    ```
 
 ## Week 0: Project Setup
 

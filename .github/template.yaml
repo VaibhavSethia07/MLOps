@@ -4,3 +4,5 @@ gcs_trained_models_bucket_uri: ${GCS_TRAINED_MODELS_BUCKET_URI}
 gcr_repository: ${GCR_REPOSITORY}
 gcr_host: ${GCR_HOST}
 gcp_service_account_email: ${GCP_SERVICE_ACCOUNT_EMAIL}
+elastic_apm_server_url: ${ELASTIC_APM_SERVER_URL}
+elastic_apm_secret_token: ${ELASTIC_APM_SECRET_TOKEN}

@@ -6,6 +6,8 @@ WORKDIR /app
 ARG GCP_CREDENTIALS_JSON
 ARG GCP_PROJECT_ID
 ARG GCS_TRAINED_MODELS_BUCKET_URI
+ARG ELASTIC_APM_SERVER_URL
+ARG ELASTIC_APM_SECRET_TOKEN
 
 RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg && apt-get update -y && apt-get install google-cloud-sdk -y
     
@@ -31,7 +33,14 @@ RUN dvc pull models/best-checkpoint.ckpt.dvc models/model.onnx.dvc
 
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
+ENV OTEL_EXPORTER_OTLP_ENDPOINT='$ELASTIC_APM_SERVER_URL'
+ENV OTEL_EXPORTER_OTLP_HEADERS='Authorization=Bearer $ELASTIC_APM_SECRET_TOKEN'
+ENV OTEL_LOG_LEVEL=info
+ENV OTEL_METRICS_EXPORTER=otlp
+ENV OTEL_RESOURCE_ATTRIBUTES=service.version=1.0,deployment.environment=production
+ENV OTEL_SERVICE_NAME=helloworld
+ENV OTEL_TRACES_EXPORTER=otlp
 
 # running the application
 EXPOSE 8000
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["opentelemetry-instrument", "--service_name", "MLOps App", "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
