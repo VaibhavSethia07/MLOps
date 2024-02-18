@@ -16,5 +16,7 @@ asyncio
 fastapi==0.83.0
 uvicorn==0.16.0
 opentelemetry-distro
+opentelemetry-sdk
+opentelemetry-api
 opentelemetry-exporter-otlp-proto-grpc
 opentelemetry-instrumentation-fastapi
