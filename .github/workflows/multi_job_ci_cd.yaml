@@ -145,28 +145,34 @@ jobs:
 
       - name: Load Docker images
         run: |
-          docker load -i /tmp/docker-images/inference_latest.tar
+            docker load -i /tmp/docker-images/inference_latest.tar
+
+      - name: Authenticate to GCP
+        run: |
+            gcloud auth activate-service-account --key-file=gcp-credentials.json
+            gcloud auth configure-docker $GCR_HOST -q
 
       - name: Push Docker Image to GCR
         run: |
             echo "GCR Host: $GCR_HOST"
             
             docker tag inference:latest $GCR_HOST/${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference:latest
-            
             docker images | grep inference
-            gcloud auth activate-service-account --key-file=gcp-credentials.json
-            gcloud auth configure-docker $GCR_HOST -q
             docker push $GCR_HOST/${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference
 
   deploy-on-Cloud-Run:
     name: Deploy on Google Cloud Run
     runs-on: ubuntu-latest
-    needs: [authenticate-to-Google-Cloud-Platform, publish-image-to-Google-Artifact-Registry]
+    needs: publish-image-to-Google-Artifact-Registry
     env:
       GCR_HOST: ${{ vars.GCR_HOST }}
       GCR_REPOSITORY: ${{ vars.GCR_REPOSITORY }}
 
     steps:
+      - name: Authenticate to GCP
+        run: |
+            gcloud auth activate-service-account --key-file=gcp-credentials.json
+
       - name: Deploy service on Google Cloud Run
         run: |
             echo "Deploying to Production🚀🚀"
