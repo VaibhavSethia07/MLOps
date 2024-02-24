@@ -91,7 +91,6 @@ jobs:
             # Save the built Docker image as an artifact
             docker save inference:latest > inference_latest.tar
 
-        Upload the artifacts
       - name: Upload Docker Image
         uses: actions/upload-artifact@v2
         with:
