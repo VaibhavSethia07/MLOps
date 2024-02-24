@@ -1,5 +1,4 @@
 import torch
-
 from data import DataModule
 from model import ColaModel
 from utils import timing

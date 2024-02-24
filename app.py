@@ -1,8 +1,7 @@
 from typing import List
 
 from fastapi import FastAPI
-
-from inference_onnx import ColaONNXPredictor  # isort:skip
+from inference_onnx import ColaONNXPredictor
 
 summary = '''This is an application powered by NLP.
 This app can classify a sentence into one of the two classes.

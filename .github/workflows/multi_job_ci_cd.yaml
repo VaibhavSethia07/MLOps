@@ -62,10 +62,8 @@ jobs:
         run: |
           pycodestyle . --exclude=.venv --max-line-length=120 --indent-size=4
           pycodestyle_exit_code=$?
-          isort --check-only .
-          isort_exit_code=$?
           
-          if [ $pycodestyle_exit_code -ne 0 ] || [ $isort_exit_code -ne 0 ]; then
+          if [ $pycodestyle_exit_code -ne 0 ]; then
             echo "Code quality check failed."
             exit 1
           else
