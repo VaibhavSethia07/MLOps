@@ -1,4 +1,5 @@
 import torch
+
 from data import DataModule
 from model import ColaModel
 from utils import timing
@@ -21,7 +22,7 @@ class ColaPredictor:
         """Get the predictions
             Args:
             text (str): The input sentence to classify as either acceptable or unacceptable.
-            Returns: 
+            Returns:
             A dictionary containing the predicted label and its probability score.
         """
         # text - run time input

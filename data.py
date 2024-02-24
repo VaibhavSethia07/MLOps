@@ -41,10 +41,12 @@ class DataModule(pl.LightningDataModule):
             print(f'After formatting val_data[0]={self.val_data[0]}')
 
     def train_dataloader(self):
-        return torch.utils.data.DataLoader(self.train_data, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
+        return torch.utils.data.DataLoader(self.train_data, batch_size=self.batch_size, shuffle=True,
+                                           num_workers=self.num_workers)
 
     def val_dataloader(self):
-        return torch.utils.data.DataLoader(self.val_data, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers)
+        return torch.utils.data.DataLoader(self.val_data, batch_size=self.batch_size, shuffle=False,
+                                           num_workers=self.num_workers)
 
 
 if __name__ == '__main__':

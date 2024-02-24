@@ -1,11 +1,11 @@
-import torch
-import hydra
 import logging
 
+import hydra
+import torch
 from omegaconf.omegaconf import OmegaConf
 
-from model import ColaModel
 from data import DataModule
+from model import ColaModel
 
 logger = logging.getLogger(__name__)
 

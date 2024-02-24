@@ -5,12 +5,13 @@ import pandas as pd
 import pytorch_lightning as pl
 import torch
 import wandb
-from data import DataModule
-from model import ColaModel
 from omegaconf.omegaconf import OmegaConf
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from pytorch_lightning.loggers import WandbLogger
+
+from data import DataModule
+from model import ColaModel
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +56,8 @@ def main(cfg):
     wandb_logger = WandbLogger(project='MLOps', entity='renegade07')
     trainer = pl.Trainer(max_epochs=cfg.training.max_epochs, logger=wandb_logger,
                          log_every_n_steps=cfg.training.log_every_n_steps, deterministic=cfg.training.deterministic,
-                         callbacks=[checkpoint_callback, SamplesVisualisationLogger(cola_data), early_stopping_callback])
+                         callbacks=[checkpoint_callback, SamplesVisualisationLogger(cola_data),
+                                    early_stopping_callback])
     trainer.fit(model=cola_model, datamodule=cola_data)
     wandb.finish()
 
