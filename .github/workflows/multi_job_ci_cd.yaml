@@ -155,7 +155,7 @@ jobs:
 
   deploy-on-Cloud-Run:
     runs-on: ubuntu-latest
-    needs: push-image-to-GAR
+    needs: publish-image-to-Google-Artifact-Registry
     env:
       GCR_HOST: ${{ vars.GCR_HOST }}
       GCR_REPOSITORY: ${{ vars.GCR_REPOSITORY }}
