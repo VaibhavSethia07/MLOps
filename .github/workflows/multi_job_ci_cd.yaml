@@ -48,8 +48,8 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          workload_identity_provider: '${{ GCP_WORKLOAD_IDENTITY_PROVIDER }}'
-          service_account: '${{ GCP_SERVICE_ACCOUNT_EMAIL }}'
+          workload_identity_provider: '${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}'
+          service_account: '${{ vars.GCP_SERVICE_ACCOUNT_EMAIL }}'
 
 
   code-quality:
