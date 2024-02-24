@@ -169,6 +169,14 @@ jobs:
       GCR_REPOSITORY: ${{ vars.GCR_REPOSITORY }}
 
     steps:
+      - name: Secrets to File
+        uses: mobiledevops/secret-to-file-action@v1
+        with:
+          base64-encoded-secret: ${{ secrets.GCP_CREDENTIALS_JSON }}
+          filename: "gcp-credentials.json"
+          is-executable: true
+          working-directory: "./"
+          
       - name: Authenticate to GCP
         run: |
             gcloud auth activate-service-account --key-file=gcp-credentials.json
