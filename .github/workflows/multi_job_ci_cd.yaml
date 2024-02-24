@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: 'actions/checkout@v4'
-      
+
       - name: Configure GCP Credentials
         uses: nightstory/gcp-secrets-action@v1
         with:
@@ -60,6 +60,8 @@ jobs:
       GCS_TRAINED_MODELS_BUCKET_URI: ${{ vars.GCS_TRAINED_MODELS_BUCKET_URI }}
 
     steps:
+      - uses: 'actions/checkout@v4'
+      
       - name: Secrets to File
         uses: mobiledevops/secret-to-file-action@v1
         with:
