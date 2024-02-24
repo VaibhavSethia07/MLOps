@@ -159,15 +159,15 @@ jobs:
             docker push $GCR_HOST/${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference
 
   deploy-on-Cloud-Run:
-    name: Deploy on Cloud Run
+    name: Deploy on Google Cloud Run
     runs-on: ubuntu-latest
-    needs: publish-image-to-Google-Artifact-Registry
+    needs: [authenticate-to-Google-Cloud-Platform, publish-image-to-Google-Artifact-Registry]
     env:
       GCR_HOST: ${{ vars.GCR_HOST }}
       GCR_REPOSITORY: ${{ vars.GCR_REPOSITORY }}
 
     steps:
-      - name: Deploy service to Cloud Run
+      - name: Deploy service on Google Cloud Run
         run: |
             echo "Deploying to Production🚀🚀"
             gcloud run deploy inference --image $GCR_HOST/${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference --project ${{ secrets.GCP_PROJECT_ID }} --max-instances=4 --platform managed --region asia-south1 --allow-unauthenticated
