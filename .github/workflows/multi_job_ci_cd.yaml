@@ -12,6 +12,8 @@ jobs:
   configure-service-account:
     runs-on: ubuntu-latest
     steps:
+      - uses: 'actions/checkout@v4'
+      
       - name: Configure GCP Credentials
         uses: nightstory/gcp-secrets-action@v1
         with:
