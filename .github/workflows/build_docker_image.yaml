@@ -1,8 +1,4 @@
-name: CI MLOps
-
-on:
-  push:
-    branches: dev
+name: Single Job CI/CD
 
 jobs:
   mlops-container:
