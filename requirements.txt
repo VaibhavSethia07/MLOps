@@ -15,10 +15,5 @@ onnxruntime
 asyncio
 fastapi
 uvicorn
-opentelemetry-distro
-opentelemetry-sdk
-opentelemetry-api
-opentelemetry-exporter-otlp-proto-grpc
-opentelemetry-instrumentation-fastapi
-pycodestyle==2.11.1
-isort==5.13.2
+pycodestyle
+isort

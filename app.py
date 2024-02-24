@@ -1,7 +1,6 @@
 from typing import List
 
 from fastapi import FastAPI
-
 from inference_onnx import ColaONNXPredictor
 
 summary = '''This is an application powered by NLP.
