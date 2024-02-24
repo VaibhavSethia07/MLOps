@@ -170,4 +170,4 @@ jobs:
       - name: Deploy service to Cloud Run
         run: |
             echo "Deploying to Production🚀🚀"
-            gcloud run deploy inference --image $GCR_HOST/${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference --max-instances=4 --platform managed --region asia-south1 --allow-unauthenticated
+            gcloud run deploy inference --image $GCR_HOST/${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference --project ${{ secrets.GCP_PROJECT_ID }} --max-instances=4 --platform managed --region asia-south1 --allow-unauthenticated
