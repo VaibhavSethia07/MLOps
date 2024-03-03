@@ -92,7 +92,7 @@ jobs:
         
       - name: Install dependencies
         run: |
-          pip install numpy fastapi pytest httpx onnxruntime datasets pytorch_lightning transformers scipy dvc
+          pip install numpy fastapi pytest httpx onnxruntime datasets pytorch_lightning transformers scipy dvc "dvc[gcs]" "dvc[gs]"
           pip list
 
       - name: Pull models from remote storage
