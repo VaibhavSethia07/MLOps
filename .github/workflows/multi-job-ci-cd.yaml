@@ -193,10 +193,6 @@ jobs:
             docker images | grep inference
             docker push $GCR_HOST/${{ secrets.GCP_PROJECT_ID }}/$GCR_REPOSITORY/inference
 
-      - name: Delete Docker image tar file
-        run: |
-            rm /tmp/docker-images/inference_latest.tar
-
   deploy-on-Cloud-Run:
     name: Deploy on Google Cloud Run
     runs-on: ubuntu-latest
