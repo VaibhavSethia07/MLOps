@@ -1,7 +1,7 @@
 pytorch-lightning==1.2.10
 datasets==1.6.2
 transformers==4.5.1
-scikit-learn==0.23
+scikit-learn==0.24.2
 wandb==0.15.11
 torchmetrics
 matplotlib==3.3.4
@@ -16,5 +16,3 @@ asyncio
 fastapi
 uvicorn
 pycodestyle
-pytest
-httpx

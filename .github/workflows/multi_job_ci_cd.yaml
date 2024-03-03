@@ -56,7 +56,7 @@ jobs:
         
       - name: Install dependencies
         run: |
-          pip install pycodestyle isort
+          pip install pycodestyle
         
       - name: Linting
         run: |
@@ -69,6 +69,40 @@ jobs:
           else
             echo "Code quality check passed."
           fi
+
+  tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    env:
+      GCS_TRAINED_MODELS_BUCKET_URI: ${{ vars.GCS_TRAINED_MODELS_BUCKET_URI }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+  
+      - name: Secrets to File
+        uses: mobiledevops/secret-to-file-action@v1
+        with:
+          base64-encoded-secret: ${{ secrets.GCP_CREDENTIALS_JSON }}
+          filename: "gcp-credentials.json"
+          is-executable: true
+          working-directory: "./"
+        
+      - name: Install dependencies
+        run: |
+          pip install numpy fastapi pytest httpx onnxruntime datasets pytorch_lightning transformers scipy dvc
+          pip list
+
+      - name: Pull models from remote storage
+        run: |
+          dvc remote add -d model-store $GCS_TRAINED_MODELS_BUCKET_URI
+          dvc remote modify model-store projectname ${{ secrets.GCP_PROJECT_ID }}
+          dvc remote modify --local model-store credentialpath gcp-credentials.json
+          dvc pull models/best-checkpoint.ckpt.dvc models/model.onnx.dvc
+
+      - name: Run tests
+        run: |
+          pytest -vv
 
   build-image:
     name: Build Docker Image
@@ -103,8 +137,6 @@ jobs:
               --build-arg GCP_CREDENTIALS_JSON=gcp-credentials.json \
               --build-arg GCP_PROJECT_ID="${{ secrets.GCP_PROJECT_ID }}" \
               --build-arg GCS_TRAINED_MODELS_BUCKET_URI="$GCS_TRAINED_MODELS_BUCKET_URI" \
-              --build-arg ELASTIC_APM_SERVER_URL="${{ secrets.ELASTIC_APM_SERVER_URL }}" \
-              --build-arg ELASTIC_APM_SECRET_TOKEN="${{ secrets.ELASTIC_APM_SECRET_TOKEN }}" \
               --tag inference:latest \
               -f Dockerfile .
 
